@@ -1,0 +1,192 @@
+@import 'leaflet/dist/leaflet.css';
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 9%;
+  --primary: 358 79% 43%;
+  --primary-foreground: 0 0% 100%;
+  --primary-deep: 358 79% 34%;
+  --secondary: 60 5% 95%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 60 5% 95%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 338 78% 43%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 45%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 148 60% 28%;
+  --success-soft: 145 50% 91%;
+  --warning-soft: 45 100% 90%;
+  --warning-foreground: 38 90% 22%;
+  --ember: 9 79% 9%;
+  --ember-glow: 22 100% 55%;
+  --border: 0 0% 90%;
+  --input: 0 0% 86%;
+  --ring: 358 79% 43%;
+  --chart-1: 0 96% 37%;
+  --chart-2: 45 96% 48%;
+  --chart-3: 148 60% 28%;
+  --chart-4: 22 100% 55%;
+  --chart-5: 30 12% 30%;
+  --radius: 1rem;
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 30 12% 10%;
+  --sidebar-primary: 0 96% 37%;
+  --sidebar-primary-foreground: 36 65% 97%;
+  --sidebar-accent: 60 5% 95%;
+  --sidebar-accent-foreground: 30 12% 10%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-ring: 0 96% 37%;
+}
+
+@theme inline {
+  --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Onest', ui-sans-serif, system-ui, sans-serif;
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-deep: hsl(var(--primary-deep));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-soft: hsl(var(--success-soft));
+  --color-warning-soft: hsl(var(--warning-soft));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-ember: hsl(var(--ember));
+  --color-ember-glow: hsl(var(--ember-glow));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+}
+
+/* Dégradé « braise » de la bannière */
+.hero-shade {
+  background: linear-gradient(100deg, hsl(var(--ember) / 0.92) 0%, hsl(var(--ember) / 0.6) 45%, hsl(var(--ember) / 0.05) 100%);
+}
+.ember-bg {
+  background: radial-gradient(circle at 85% 100%, hsl(var(--ember-glow) / 0.55), transparent 55%), hsl(var(--ember));
+}
+
+/* Marqueurs de carte */
+.kb-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 3px solid hsl(var(--card));
+  box-shadow: 0 4px 14px hsl(var(--foreground) / 0.35);
+  font-size: 18px;
+}
+.kb-marker-resto { background: hsl(var(--primary)); }
+.kb-marker-home { background: hsl(var(--success)); }
+.kb-marker-driver { background: hsl(var(--accent)); animation: kb-pulse 1.8s infinite; }
+@keyframes kb-pulse {
+  0% { box-shadow: 0 0 0 0 hsl(var(--accent) / 0.55); }
+  70% { box-shadow: 0 0 0 16px hsl(var(--accent) / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--accent) / 0); }
+}
+.leaflet-container { font-family: var(--font-sans); z-index: 0; }
+
+/* Hide Vite badge and error messages */
+body vite-error-overlay {
+  display: none;
+}
+
+/* Étiquettes des quartiers sur la carte */
+.kb-zone-label {
+  background: hsl(var(--card) / 0.92);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px hsl(var(--foreground) / 0.2);
+  padding: 2px 6px;
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+  color: hsl(var(--foreground));
+}
+.kb-zone-label::before { display: none; }
+
+/* Écran d'attente client : animations douces, suivant le vrai statut */
+.lb-anim g, .lb-anim path, .lb-anim rect, .lb-anim circle { transform-box: fill-box; }
+.lb-pan { transform-origin: 30% 60%; animation: lb-rock 1.6s ease-in-out infinite; }
+@keyframes lb-rock { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg) translateY(-3px); } }
+.lb-bit { transform-origin: center; animation: lb-toss 1.6s cubic-bezier(.3,.7,.4,1) infinite; }
+.lb-bit-b { animation-duration: 1.7s; }
+@keyframes lb-toss { 0%, 100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-58px) rotate(160deg); } 70% { transform: translateY(-10px) rotate(300deg); } }
+.lb-steam path { animation: lb-steam 2.4s ease-in-out infinite; opacity: 0; }
+@keyframes lb-steam { 0% { opacity: 0; transform: translateY(14px); } 40% { opacity: .9; } 100% { opacity: 0; transform: translateY(-16px); } }
+.lb-ticket { animation: lb-drop 2.2s ease-out infinite; }
+@keyframes lb-drop { 0% { transform: translateY(-30px); opacity: 0; } 30% { opacity: 1; } 60%, 100% { transform: translateY(18px); opacity: 1; } }
+.lb-hop { transform-origin: bottom center; animation: lb-hop 1.8s ease-in-out infinite; }
+@keyframes lb-hop { 0%, 60%, 100% { transform: translateY(0) scale(1); } 20% { transform: translateY(-14px) scale(1.02); } 35% { transform: translateY(0) scale(1.03, .97); } }
+.lb-bob { animation: lb-bob .7s ease-in-out infinite; }
+@keyframes lb-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.lb-road { animation: lb-road .9s linear infinite; }
+@keyframes lb-road { from { transform: translateX(0); } to { transform: translateX(-90px); } }
+.lb-spin { animation: lb-spin 1s linear infinite; }
+@keyframes lb-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .lb-anim *, .lb-spin { animation: none !important; }
+  .lb-steam path { opacity: .7; }
+}

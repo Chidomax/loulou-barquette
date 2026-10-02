@@ -1,0 +1,22 @@
+{
+  "default": {
+    "title": "Loulou Barquette – Commande en ligne à Tsoundzou 2, Mamoudzou",
+    "description": "Restaurant-snack Loulou Barquette à Tsoundzou 2 : commandez en ligne, payez par carte ou titre-restaurant et suivez votre livreur en direct. Livraison offerte dès 50 €."
+  },
+  "/": {
+    "title": "Loulou Barquette – Commande en ligne à Tsoundzou 2, Mamoudzou",
+    "description": "Restaurant-snack Loulou Barquette à Tsoundzou 2 : commandez en ligne, payez par carte ou titre-restaurant et suivez votre livreur en direct. Livraison offerte dès 50 €."
+  },
+  "/checkout": {
+    "title": "Paiement – Loulou Barquette",
+    "description": "Paiement sécurisé de votre commande."
+  },
+  "/suivi": {
+    "title": "Suivi de commande – Loulou Barquette",
+    "description": "Suivez votre commande et votre livreur en direct."
+  },
+  "/equipe": {
+    "title": "Espace équipe – Loulou Barquette",
+    "description": "Caisse, cuisine, livreurs et gestion du site."
+  }
+}

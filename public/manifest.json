@@ -1,0 +1,30 @@
+{
+  "id": "/",
+  "short_name": "Loulou Barquette",
+  "name": "Loulou Barquette – Commande en ligne",
+  "description": "Commandez vos plats Loulou Barquette, payez en ligne et suivez votre livreur en direct à Mamoudzou.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "categories": ["food", "shopping"],
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "/screenshots/accueil.png", "sizes": "780x1688", "type": "image/png", "form_factor": "narrow", "label": "Accueil et commande" },
+    { "src": "/screenshots/carte.png", "sizes": "780x1688", "type": "image/png", "form_factor": "narrow", "label": "La carte et les frais de livraison" }
+  ],
+  "shortcuts": [
+    { "name": "Commander", "url": "/?source=app#carte", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Suivre ma commande", "url": "/suivi?source=app", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Mon compte", "url": "/compte?source=app", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Espace équipe", "url": "/equipe?source=app", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
