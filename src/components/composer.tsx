@@ -3,7 +3,7 @@ import { Check, Minus, Plus, X } from 'lucide-react'
 import { type Choice, type Group, type Sel, bounds, priceSelection, visibleGroups } from '@/convex/shared'
 import { eur } from '@/lib/shop'
 
-export type ComposerItem = { _id: string; name: string; price: number; description: string; imageUrl: string | null; groups: Group[] }
+export type ComposerItem = { _id: string; name: string; price: number; description: string; imageUrl: string | null; groups: Group[]; category?: string }
 
 /**
  * Composition d'un plat à options (ex. tacos) : taille → viandes → sauces et sous-options → suppléments → formule.

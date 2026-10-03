@@ -8,6 +8,7 @@ import type { Id } from '@/convex/_generated/dataModel'
 import { SiteHeader } from '@/components/site-header'
 import { InstallApp } from '@/components/install-app'
 import { Composer, type ComposerItem } from '@/components/composer'
+import { SidesSheet } from '@/components/sides-sheet'
 import { shopState } from '@/convex/shared'
 import { ZoneMap } from '@/components/zone-map'
 import { FREE_DELIVERY_FROM, MIN_DELIVERY_ORDER, REWARD_POINTS, REWARD_VALUE, TR_DAILY_CAP, eur, rememberOrder, useCart } from '@/lib/shop'
@@ -17,6 +18,10 @@ export const Route = createFileRoute('/')({
   head: () => ({ meta: [{ title: siteMetadata['/'].title }, { name: 'description', content: siteMetadata['/'].description }] }),
   component: Home,
 })
+
+// Catégorie des accompagnements proposés après l'ajout d'un plat, et catégories qui n'en déclenchent pas
+const SIDES_CATEGORY = 'Accompagnements'
+const NO_SIDES = ['Accompagnements', 'Boissons', 'Entrées']
 
 type Mode = 'livraison' | 'emporter' | 'surplace'
 type Pay = 'cb' | 'tr' | 'place'
@@ -39,6 +44,8 @@ function Home() {
   const [sending, setSending] = useState(false)
   const [useReward, setUseReward] = useState(false)
   const [composing, setComposing] = useState<ComposerItem | null>(null)
+  // Plat qui vient d'être ajouté : on propose les accompagnements
+  const [sidesFor, setSidesFor] = useState<string | null>(null)
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => { const i = setInterval(() => setNow(Date.now()), 30_000); return () => clearInterval(i) }, [])
 
@@ -60,6 +67,13 @@ function Home() {
     for (const it of data?.items ?? []) { if (!map.has(it.category)) map.set(it.category, []); map.get(it.category)!.push(it) }
     return [...map.entries()]
   }, [data])
+  const sides = useMemo(() => (data?.items ?? []).filter((i) => i.category === SIDES_CATEGORY && !i.groups), [data])
+  /** Ajoute un plat ; pour un plat principal, propose ensuite les accompagnements. */
+  function addItem(it: { _id: string; name: string; price: number; category: string }) {
+    cart.add({ itemId: it._id, name: it.name, price: it.price })
+    if (!NO_SIDES.includes(it.category) && sides.length) setSidesFor(it.name)
+    else toast.success(`${it.name} ajouté`)
+  }
 
   const zoneObj = data?.zones.find((z) => z.name === zone)
   const st = cart.subtotal
@@ -170,7 +184,7 @@ function Home() {
                           ? <span className="rounded-full bg-secondary px-3 py-1.5 text-sm font-semibold text-muted-foreground">Épuisé</span>
                           : it.groups
                             ? <button type="button" onClick={() => setComposing({ ...it, groups: it.groups! })} aria-label={`Composer ${it.name}`} className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep">Composer</button>
-                            : <button type="button" onClick={() => { cart.add({ itemId: it._id, name: it.name, price: it.price }); toast.success(`${it.name} ajouté`) }} aria-label={`Ajouter ${it.name}`} className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep">Ajouter</button>}
+                            : <button type="button" onClick={() => addItem(it)} aria-label={`Ajouter ${it.name}`} className="rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep">Ajouter</button>}
                       </div>
                     </div>
                   </article>
@@ -223,7 +237,7 @@ function Home() {
                 <Field label="Quartier">
                   <select required value={zone} onChange={(e) => setZone(e.target.value)} className="w-full rounded-lg border bg-background px-3 py-2">
                     <option value="">Choisir…</option>
-                    {data?.zones.map((z) => <option key={z.name} value={z.name}>{z.name} — {eur(z.fee)} · {z.delai}</option>)}
+                    {data?.zones.map((z) => <option key={z.name} value={z.name}>{z.name} — {eur(z.fee)}</option>)}
                   </select>
                 </Field>
                 <Field label="Adresse ou repère pour le livreur">
@@ -271,22 +285,6 @@ function Home() {
         </aside>
       </section>
 
-      {/* Frais de livraison */}
-      {!!data?.zones.length && (
-        <section id="livraison" className="mx-auto mt-10 max-w-6xl px-4">
-          <h2 className="text-2xl font-bold">Frais de livraison</h2>
-          <p className="mt-1 text-muted-foreground">Livraison offerte dès {eur(FREE_DELIVERY_FROM)} de commande. Minimum {eur(MIN_DELIVERY_ORDER)} pour être livré.</p>
-          <ul className="mt-4 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-            {[...data.zones].sort((x, y) => x.fee - y.fee).map((z) => (
-              <li key={z.name} className="flex items-baseline justify-between gap-3 border-b py-3">
-                <span><span className="font-semibold">{z.name}</span>{z.delai && <span className="block text-sm text-muted-foreground">{z.delai}</span>}</span>
-                <span className="font-semibold">{eur(z.fee)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       {/* Suivi façon livraison à domicile */}
       <section className="mx-auto my-8 max-w-6xl px-4">
         <div className="grid overflow-hidden rounded-[1.75rem] bg-secondary md:grid-cols-2">
@@ -320,7 +318,19 @@ function Home() {
 
       {composing && data && (
         <Composer item={composing} outIngredients={data.outIngredients} onClose={() => setComposing(null)}
-          onAdd={(r) => { cart.add({ itemId: composing._id, name: composing.name, price: r.price, sel: r.sel, details: r.details, remarque: r.remarque }, r.qte); toast.success(`${composing.name} ajouté au panier`); setComposing(null) }} />
+          onAdd={(r) => {
+            cart.add({ itemId: composing._id, name: composing.name, price: r.price, sel: r.sel, details: r.details, remarque: r.remarque }, r.qte)
+            setComposing(null)
+            // Formule menu : frites et boisson déjà comprises, on ne propose pas d'accompagnement
+            const menu = r.sel.some((x) => x.g === 'formule' && x.c === 'menu')
+            if (!menu && !NO_SIDES.includes(composing.category ?? '') && sides.length) setSidesFor(composing.name)
+            else toast.success(`${composing.name} ajouté au panier`)
+          }} />
+      )}
+      {sidesFor && (
+        <SidesSheet dish={sidesFor} sides={sides} onClose={() => setSidesFor(null)}
+          inCart={(id) => cart.lines.filter((l) => l.itemId === id).reduce((s, l) => s + l.qte, 0)}
+          onAdd={(s) => { cart.add({ itemId: s._id, name: s.name, price: s.price }); toast.success(`${s.name.replace(/^\+\s*/, '')} ajouté`) }} />
       )}
 
       <div className="mx-auto mt-12 max-w-6xl px-4"><InstallApp /></div>
